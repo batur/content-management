@@ -31,6 +31,8 @@ export default function (req: NextApiRequest, res: NextApiResponse): void {
     } else {
       res.status(200).json({
         message: 'Login successful',
+        id: user.id,
+        username: user.username,
         token: jwt.sign({ user }, 'secret', {
           expiresIn: 86400, // 24 hours
         }),

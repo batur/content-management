@@ -8,18 +8,26 @@ import AuthAtom from 'store/Auth';
 
 export default function usePostLogin() {
   const setAuthAtom = useSetAtom(AuthAtom);
-  return useMutation(async (data: { username: string; password: string }) => {
+  return useMutation(async (data) => {
     return await axios
       .post('/api/login', data)
       .then((res: AxiosResponse<Record<string, string>>) => {
-        const { token, message } = res.data;
+        const { id, username, token, message } = res.data;
 
-        setAuthAtom(token);
+        setAuthAtom({
+          id,
+          username,
+          token,
+        });
         toast.success(message);
       })
       .catch((err: AxiosError<Record<string, string>>) => {
         toast.error(err.response?.data.message);
-        setAuthAtom('');
+        setAuthAtom({
+          id: '',
+          username: '',
+          token: '',
+        });
       });
   });
 }
