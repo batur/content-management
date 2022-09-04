@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useMutation} from '@tanstack/react-query';
 import axios, {AxiosError, AxiosResponse} from 'axios';
-import {useAtomValue} from 'jotai';
+import {isJWTInvalid} from 'helpers';
+import {useAtom} from 'jotai';
 import {toast} from 'react-toastify';
 import AuthAtom from 'store/Auth';
 
 export default function usePostContent(props?: any) {
-  const auth = useAtomValue(AuthAtom);
+  const [auth, setAuth] = useAtom(AuthAtom);
 
   return useMutation(
     (data: string) =>
@@ -32,6 +33,7 @@ export default function usePostContent(props?: any) {
           toast.success(message);
         })
         .catch((err: AxiosError<Record<string, string>>) => {
+          isJWTInvalid(auth.token) && setAuth(null);
           toast.error(err.response?.data.message);
           throw err;
         }),
