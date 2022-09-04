@@ -1,14 +1,18 @@
-import { atom } from 'jotai';
-
-const auth = atom(
-  JSON.parse(localStorage.getItem('auth') ?? '{}') as Record<string, string>
-);
+import {atom} from 'jotai';
 
 const AuthAtom = atom(
-  (get) => get(auth),
-  (get, set, payload: { id: string; token: string; username: string }) => {
-    set(auth, payload);
-    localStorage.setItem('auth', JSON.stringify(payload));
+  () => {
+    const auth = typeof window !== 'undefined' ? localStorage.getItem('auth') : null;
+    return auth ? JSON.parse(auth) : null;
+  },
+  (_get, _set, payload: string | null) => {
+    if (payload === null) {
+      return;
+    } else {
+      const parsed = JSON.parse(payload);
+      localStorage.setItem('auth', payload);
+      return parsed;
+    }
   }
 );
 

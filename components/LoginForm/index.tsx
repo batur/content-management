@@ -1,28 +1,31 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Box, TextField, Button } from '@mui/material';
-import { api } from 'hooks';
-import React, { FC } from 'react';
+import {Box, TextField, Button} from '@mui/material';
+import {api} from 'hooks';
+import {useRouter} from 'next/router';
+import React, {FC} from 'react';
 
-import { Controller, useForm } from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 
 const LoginForm: FC = () => {
+  const router = useRouter();
   const {
     handleSubmit,
-    formState: { errors },
-    control,
+    formState: {errors},
+    control
   } = useForm({
     defaultValues: {
       username: '',
-      password: '',
-    },
+      password: ''
+    }
   });
 
-  const { mutate, isLoading } = api.usePostLogin();
+  const {mutate, isLoading} = api.usePostLogin({
+    onSuccess: () => {
+      router.push('/');
+    }
+  });
 
-  const handleLoginFormSubmit = (data: {
-    username: string;
-    password: string;
-  }): void => {
+  const handleLoginFormSubmit = (data: {username: string; password: string}): void => {
     mutate(data);
   };
 
@@ -34,7 +37,7 @@ const LoginForm: FC = () => {
         alignItems: 'center',
         gap: 4,
         width: '100%',
-        maxWidth: (theme) => theme.breakpoints.values.sm / 2,
+        maxWidth: (theme) => theme.breakpoints.values.sm / 2
       }}
       component="form"
       onSubmit={handleSubmit(handleLoginFormSubmit)}
@@ -45,14 +48,11 @@ const LoginForm: FC = () => {
           required: 'Username is required',
           minLength: {
             value: 3,
-            message: 'Username must be at least 3 characters',
-          },
+            message: 'Username must be at least 3 characters'
+          }
         }}
         control={control}
-        render={({
-          fieldState: { error },
-          field: { value, onChange, onBlur, ref, ...props },
-        }) => (
+        render={({fieldState: {error}, field: {value, onChange, onBlur, ref, ...props}}) => (
           <TextField
             value={value}
             onChange={onChange}
@@ -74,14 +74,11 @@ const LoginForm: FC = () => {
           required: 'Password is required',
           minLength: {
             value: 3,
-            message: 'Password must be at least 3 characters',
-          },
+            message: 'Password must be at least 3 characters'
+          }
         }}
         control={control}
-        render={({
-          fieldState: { error },
-          field: { value, onChange, onBlur, ref, ...props },
-        }) => (
+        render={({fieldState: {error}, field: {value, onChange, onBlur, ref, ...props}}) => (
           <TextField
             value={value}
             onChange={onChange}

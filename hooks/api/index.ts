@@ -3,4 +3,4 @@ import useGetAllContent from './useGetAllContent';
 import usePostContent from './usePostContent';
 import usePostLogin from './usePostLogin';
 
-export default { useGetAllContent, usePostContent, usePostLogin };
+export default {useGetAllContent, usePostContent, usePostLogin};

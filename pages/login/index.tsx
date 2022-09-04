@@ -1,6 +1,6 @@
-import { Box, Container } from '@mui/material';
-import { LoginForm } from 'components';
-import { NextPage } from 'next';
+import {Box, Container} from '@mui/material';
+import {LoginForm} from 'components';
+import {NextPage} from 'next';
 
 const Login: NextPage = () => {
   return (
@@ -8,7 +8,7 @@ const Login: NextPage = () => {
       sx={{
         width: '100%',
         height: '100%',
-        display: 'flex',
+        display: 'flex'
       }}
     >
       <Container
@@ -20,7 +20,7 @@ const Login: NextPage = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          flexGrow: 1,
+          flexGrow: 1
         }}
       >
         <LoginForm />
