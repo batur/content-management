@@ -15,7 +15,7 @@ export default function usePostContent(props?: any) {
         .post(
           'api/contents',
           {
-            data,
+            content: data,
             createdAt: new Date().toISOString(),
             user: {
               id: auth.id,
@@ -24,12 +24,46 @@ export default function usePostContent(props?: any) {
           },
           {
             headers: {
-              Authorization: `Bearer ${auth.token}`
+              Authorization: auth.token
             }
           }
         )
         .then((res: AxiosResponse<Record<string, any>>) => {
           const {message} = res.data;
+
+          const contents = localStorage.getItem('contents');
+
+          if (contents) {
+            localStorage.setItem(
+              'contents',
+              JSON.stringify([
+                ...JSON.parse(contents),
+                {
+                  content: data,
+                  createdAt: new Date().toISOString(),
+                  user: {
+                    id: auth.id,
+                    username: auth.username
+                  }
+                }
+              ])
+            );
+          } else {
+            localStorage.setItem(
+              'contents',
+              JSON.stringify([
+                {
+                  content: data,
+                  createdAt: new Date().toISOString(),
+                  user: {
+                    id: auth.id,
+                    username: auth.username
+                  }
+                }
+              ])
+            );
+          }
+
           toast.success(message);
         })
         .catch((err: AxiosError<Record<string, string>>) => {
