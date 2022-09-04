@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQueryClient, UseMutationOptions} from '@tanstack/react-query';
 import axios, {AxiosError, AxiosResponse} from 'axios';
 import {isJWTInvalid} from 'helpers';
 import {useAtom} from 'jotai';
 import {toast} from 'react-toastify';
 import AuthAtom from 'store/Auth';
 
-export default function usePostContent(props?: any) {
+export default function usePostContent(props?: Omit<UseMutationOptions<void, unknown, string, unknown>, 'mutationFn'>) {
+  const queryClient = useQueryClient();
   const [auth, setAuth] = useAtom(AuthAtom);
 
   return useMutation(
@@ -37,7 +38,6 @@ export default function usePostContent(props?: any) {
             localStorage.setItem(
               'contents',
               JSON.stringify([
-                ...JSON.parse(contents),
                 {
                   content: data,
                   createdAt: new Date().toISOString(),
@@ -45,7 +45,8 @@ export default function usePostContent(props?: any) {
                     id: auth.id,
                     username: auth.username
                   }
-                }
+                },
+                ...JSON.parse(contents)
               ])
             );
           } else {
@@ -63,7 +64,7 @@ export default function usePostContent(props?: any) {
               ])
             );
           }
-
+          queryClient.invalidateQueries(['use-get-all-content']);
           toast.success(message);
         })
         .catch((err: AxiosError<Record<string, string>>) => {

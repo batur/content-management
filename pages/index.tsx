@@ -1,8 +1,9 @@
 import React from 'react';
 import type {NextPage} from 'next';
-import {Box, Container} from '@mui/material';
+import {Box, Card, CardContent, Container} from '@mui/material';
 
 import dynamic from 'next/dynamic';
+import {api} from 'hooks';
 
 const TextEditor = dynamic(() => import('components/TextEditor'), {
   suspense: true,
@@ -11,6 +12,8 @@ const TextEditor = dynamic(() => import('components/TextEditor'), {
 });
 
 const Home: NextPage = () => {
+  const {data: contents} = api.useGetAllContent();
+
   return (
     <Box>
       <Container>
@@ -18,6 +21,22 @@ const Home: NextPage = () => {
         <React.Suspense fallback={<div>Loading...</div>}>
           <TextEditor />
         </React.Suspense>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'wrap',
+            gap: 4
+          }}
+        >
+          {contents &&
+            contents.map((content: Contents, index: number) => (
+              <Card key={index}>
+                <CardContent>{`${content.user.id}- ${content.user.username}`}</CardContent>
+                <CardContent dangerouslySetInnerHTML={{__html: content.content}} />
+              </Card>
+            ))}
+        </Box>
       </Container>
     </Box>
   );
