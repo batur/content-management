@@ -17,8 +17,6 @@ function MyApp({Component, pageProps}: AppProps): JSX.Element {
   const router = useRouter();
   const [auth, setAuth] = useAtom(AuthAtom);
 
-  console.log(auth);
-
   useEffect(() => {
     const authLocalStorage = localStorage.getItem('auth');
     setAuth(authLocalStorage);
