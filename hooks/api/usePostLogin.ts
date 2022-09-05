@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, UseMutationOptions} from '@tanstack/react-query';
 import axios, {AxiosError, AxiosResponse} from 'axios';
 import {useSetAtom} from 'jotai';
 import {toast} from 'react-toastify';
 
 import AuthAtom from 'store/Auth';
 
-export default function usePostLogin(props: any) {
+export default function usePostLogin(
+  props?: Omit<UseMutationOptions<void, unknown, {username: string; password: string}, unknown>, 'mutationFn'>
+) {
   const setAuthAtom = useSetAtom(AuthAtom);
   return useMutation(
     (data: {username: string; password: string}) =>
