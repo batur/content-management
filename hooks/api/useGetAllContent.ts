@@ -27,7 +27,7 @@ export default function useGetAllContent(
           const contents = localStorage.getItem('contents');
 
           if (contents) {
-            return JSON.parse(contents) as Contents[];
+            return JSON.parse(contents) as Content[];
           } else {
             localStorage.setItem('contents', JSON.stringify([]));
             return [];
@@ -40,6 +40,7 @@ export default function useGetAllContent(
         }),
     {
       refetchOnWindowFocus: false,
+      enabled: !!auth,
       ...props
     }
   );
