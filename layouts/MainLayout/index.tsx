@@ -3,15 +3,25 @@ import React, {FC} from 'react';
 import {Box, Button, Container, useMediaQuery, useTheme} from '@mui/material';
 
 import {ExitToApp} from '@mui/icons-material';
+import {useRouter} from 'next/router';
+import {useSetAtom} from 'jotai';
+import AuthAtom from 'store/Auth';
 
 type Props = {
   children: React.ReactNode;
 };
 
 const MainLayout: FC<Props> = ({children}) => {
+  const router = useRouter();
   const theme = useTheme();
   const mediumBreakpoint = useMediaQuery(theme.breakpoints.up('md'));
 
+  const setAuth = useSetAtom(AuthAtom);
+
+  const handleLogout = () => {
+    router.push('/login');
+    setAuth(null);
+  };
   return (
     <Box>
       <Container
@@ -38,7 +48,7 @@ const MainLayout: FC<Props> = ({children}) => {
             alignItems: 'stretch'
           }}
         >
-          <Button variant="text" color="warning" startIcon={<ExitToApp />}>
+          <Button variant="text" color="warning" startIcon={<ExitToApp />} onClick={handleLogout}>
             Log out
           </Button>
         </Box>
