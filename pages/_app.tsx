@@ -40,7 +40,7 @@ function MyApp({Component, pageProps}: AppProps): JSX.Element {
           <CssBaseline />
           <Component {...pageProps} />
         </ThemeProvider>
-        <ToastContainer />
+        <ToastContainer limit={5} position="bottom-right" />
       </QueryClientProvider>
     </Provider>
   );
