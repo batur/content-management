@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useMutation, UseMutationOptions} from '@tanstack/react-query';
 import axios, {AxiosError, AxiosResponse} from 'axios';
+
 import {useSetAtom} from 'jotai';
 import {toast} from 'react-toastify';
-
 import AuthAtom from 'store/Auth';
 
 export default function usePostLogin(
