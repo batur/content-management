@@ -1,9 +1,10 @@
 import React, {FC} from 'react';
 
-import {Card, CardContent, Typography, CardActions, IconButton, CardActionArea} from '@mui/material';
+import {Card, CardContent, Typography, CardActions, IconButton, CardActionArea, Box} from '@mui/material';
 import {Person2, ThumbUpSharp} from '@mui/icons-material';
 import {useSetAtom} from 'jotai';
 import ModalAtom from 'store/Modal';
+import {formatDate} from 'helpers';
 
 type Props = {
   content: Content;
@@ -26,12 +27,23 @@ const Content: FC<Props> = ({content}) => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 1,
+          justifyContent: 'space-between',
           borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
         }}
       >
-        <Person2 />
-        <Typography>{content.user.username}</Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1
+          }}
+        >
+          <Person2 />
+          <Typography>{content.user.username}</Typography>
+        </Box>
+        <Box>
+          <Typography>{formatDate(content.createdAt)}</Typography>
+        </Box>
       </CardContent>
       <CardActionArea onClick={openModal}>
         <CardContent
