@@ -19,6 +19,9 @@ a {
 }
 
 @media (prefers-color-scheme: dark) {
+  body {
+    color: #000;
+  }
   .ql-editor {
     color: #000;
   }

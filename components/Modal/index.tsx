@@ -50,7 +50,7 @@ const Modal = () => {
           <Typography component="h3" variant="h5">
             {modalState.title}
           </Typography>
-          <IconButton onClick={handleClose}>
+          <IconButton color={'error'} onClick={handleClose}>
             <Close />
           </IconButton>
         </Box>
@@ -71,4 +71,4 @@ const Modal = () => {
   );
 };
 
-export default React.memo(Modal);
+export default Modal;
