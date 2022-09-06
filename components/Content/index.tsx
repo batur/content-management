@@ -26,7 +26,8 @@ const Content: FC<Props> = ({content}) => {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 1
+          gap: 1,
+          borderBottom: '1px solid rgba(255, 255, 255, 0.12)'
         }}
       >
         <Person2 />
