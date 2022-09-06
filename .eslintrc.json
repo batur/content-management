@@ -1,5 +1,4 @@
 {
-  "root": true,
   "env": {
     "browser": true,
     "es2021": true,
@@ -10,6 +9,16 @@
       "version": "detect"
     }
   },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
+    "next/core-web-vitals",
+    "next",
+    "google",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json",
@@ -19,29 +28,37 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "extends": [
-    "plugin:react/recommended",
-    "standard-with-typescript",
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:@next/next/recommended",
-    "next",
-    "next/core-web-vitals",
-    "prettier"
-  ],
-  "overrides": [],
-  "plugins": ["react", "@typescript-eslint", "@next/eslint-plugin-next"],
+  "plugins": ["react", "@typescript-eslint", "prettier", "jsx-a11y"],
   "rules": {
-    "no-console": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    // jsdoc validation off for temporary
+    "require-jsdoc": "off",
+    "import/no-anonymous-default-export": "off",
+    "indent": ["error", 2],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "never",
+        "objects": "never",
+        "imports": "never",
+        "exports": "never",
+        "functions": "never"
+      }
+    ],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "vars": "all",
-        "args": "after-used",
-        "ignoreRestSiblings": false,
+        "argsIgnorePattern": "^I",
         "varsIgnorePattern": "^_"
+      }
+    ],
+    "react-hooks/exhaustive-deps": "off",
+    "max-len": ["error", {"code": 120}],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never"
       }
     ]
   }
