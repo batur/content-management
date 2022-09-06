@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useQuery, UseQueryOptions} from '@tanstack/react-query';
 import axios, {AxiosError} from 'axios';
+
 import {isJWTInvalid} from 'helpers';
+
 import {useAtom} from 'jotai';
 import {toast} from 'react-toastify';
 import AuthAtom from 'store/Auth';
@@ -27,7 +29,7 @@ export default function useGetAllContent(
           const contents = localStorage.getItem('contents');
 
           if (contents) {
-            return JSON.parse(contents) as Contents[];
+            return JSON.parse(contents) as Content[];
           } else {
             localStorage.setItem('contents', JSON.stringify([]));
             return [];
@@ -40,6 +42,7 @@ export default function useGetAllContent(
         }),
     {
       refetchOnWindowFocus: false,
+      enabled: !!auth,
       ...props
     }
   );

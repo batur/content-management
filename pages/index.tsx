@@ -1,47 +1,74 @@
 import React from 'react';
 import type {NextPage} from 'next';
-import {Box, Card, CardContent, Container} from '@mui/material';
 
-import dynamic from 'next/dynamic';
 import {api} from 'hooks';
-
-const TextEditor = dynamic(() => import('components/TextEditor'), {
-  suspense: true,
-  ssr: false,
-  loading: () => <div>Loading...</div>
-});
+import MainLayout from 'layouts/MainLayout';
+import {Content, Modal} from 'components';
+import {Box} from '@mui/system';
+import {Button, useMediaQuery, useTheme} from '@mui/material';
+import {Add} from '@mui/icons-material';
+import {useSetAtom} from 'jotai';
+import ModalAtom from 'store/Modal';
 
 const Home: NextPage = () => {
+  const theme = useTheme();
+  const mediumBreakpoint = useMediaQuery(theme.breakpoints.up('md'));
+
+  const setModalState = useSetAtom(ModalAtom);
   const {data: contents} = api.useGetAllContent();
 
+  function handleAddContent() {
+    setModalState({
+      open: true,
+      title: 'Add Content',
+      content: '',
+      type: 'add'
+    });
+  }
+
   return (
-    <Box>
-      <Container>
-        <h1>Hello World</h1>
-        <React.Suspense fallback={<div>Loading...</div>}>
-          <TextEditor />
-        </React.Suspense>
+    <MainLayout>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: 4,
+          width: '100%',
+          height: mediumBreakpoint ? 'auto' : 'calc(100vh - 96px)',
+          overflow: mediumBreakpoint ? 'auto' : 'scroll'
+        }}
+      >
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
-            flexWrap: 'wrap',
-            gap: 4
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            width: '100%'
           }}
         >
-          {contents &&
-            contents.map((content: Contents, index: number) => (
-              <Card key={index}>
-                <CardContent>{`${content.user.id}- ${content.user.username}`}</CardContent>
-                <CardContent dangerouslySetInnerHTML={{__html: content.content}} />
-              </Card>
-            ))}
+          <Button size="large" variant="contained" color="success" startIcon={<Add />} onClick={handleAddContent}>
+            Add New
+          </Button>
         </Box>
-      </Container>
-    </Box>
+        <Box
+          sx={{
+            paddingY: mediumBreakpoint ? 2 : 0,
+            paddingTop: mediumBreakpoint ? 0 : 6,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+            width: '100%'
+          }}
+        >
+          {contents?.map((content: Content, index: number) => (
+            <Content key={index} content={content} />
+          ))}
+        </Box>
+      </Box>
+      <Modal />
+    </MainLayout>
   );
 };
 
-export default dynamic(() => Promise.resolve(Home), {
-  ssr: false
-});
+export default Home;

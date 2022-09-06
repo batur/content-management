@@ -1,7 +1,7 @@
 export {};
 
 declare global {
-  interface Contents {
+  interface Content {
     content: string;
     createdAt: string;
     user: {

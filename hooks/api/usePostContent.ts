@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {useMutation, useQueryClient, UseMutationOptions} from '@tanstack/react-query';
 import axios, {AxiosError, AxiosResponse} from 'axios';
+
 import {isJWTInvalid} from 'helpers';
+import {v4 as uuidv4} from 'uuid';
+
 import {useAtom} from 'jotai';
 import {toast} from 'react-toastify';
 import AuthAtom from 'store/Auth';
@@ -15,14 +18,7 @@ export default function usePostContent(props?: Omit<UseMutationOptions<void, unk
       axios
         .post(
           'api/contents',
-          {
-            content: data,
-            createdAt: new Date().toISOString(),
-            user: {
-              id: auth.id,
-              username: auth.username
-            }
-          },
+          {},
           {
             headers: {
               Authorization: auth.token
@@ -39,6 +35,7 @@ export default function usePostContent(props?: Omit<UseMutationOptions<void, unk
               'contents',
               JSON.stringify([
                 {
+                  id: uuidv4(),
                   content: data,
                   createdAt: new Date().toISOString(),
                   user: {
@@ -47,20 +44,6 @@ export default function usePostContent(props?: Omit<UseMutationOptions<void, unk
                   }
                 },
                 ...JSON.parse(contents)
-              ])
-            );
-          } else {
-            localStorage.setItem(
-              'contents',
-              JSON.stringify([
-                {
-                  content: data,
-                  createdAt: new Date().toISOString(),
-                  user: {
-                    id: auth.id,
-                    username: auth.username
-                  }
-                }
               ])
             );
           }

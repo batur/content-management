@@ -5,10 +5,15 @@ import {useQuill} from 'react-quilljs';
 
 import {Box, Button} from '@mui/material';
 import {api} from 'hooks';
+import {useAtom} from 'jotai';
+import ModalAtom from 'store/Modal';
 
 const TextEditor = () => {
   const {quill, quillRef} = useQuill();
+
   const {mutate, isLoading} = api.usePostContent();
+  const [modalState, setModalState] = useAtom(ModalAtom);
+
   const [isPostButtonDisabled, setIsPostButtonDisabled] = useState(true);
 
   useEffect(() => {
@@ -21,8 +26,25 @@ const TextEditor = () => {
 
   const handlePost = () => {
     mutate(quill.root.innerHTML);
+    quill.setText('');
+    modalState.open &&
+      setModalState({
+        open: false,
+        title: '',
+        content: '',
+        type: ''
+      });
   };
 
+  const handleClose = () => {
+    setModalState({
+      open: false,
+      title: '',
+      content: '',
+      type: ''
+    });
+    quill.setText('');
+  };
   return (
     <>
       <Box>
@@ -40,10 +62,10 @@ const TextEditor = () => {
           marginY: 2
         }}
       >
-        <Button variant="contained" size="large" color="error">
+        <Button variant="contained" size="medium" color="error" onClick={handleClose}>
           Discard
         </Button>
-        <Button variant="contained" size="large" onClick={handlePost} disabled={isPostButtonDisabled || isLoading}>
+        <Button variant="contained" size="medium" onClick={handlePost} disabled={isPostButtonDisabled || isLoading}>
           Post
         </Button>
       </Box>
@@ -51,4 +73,4 @@ const TextEditor = () => {
   );
 };
 
-export default TextEditor;
+export default React.memo(TextEditor);
