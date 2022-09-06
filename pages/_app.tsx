@@ -11,6 +11,11 @@ import AuthAtom from 'store/Auth';
 import {useRouter} from 'next/router';
 import {isJWTInvalid} from 'helpers';
 
+import {ThemeProvider} from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+import theme from 'theme/index';
+
 const queryClient = new QueryClient();
 
 function MyApp({Component, pageProps}: AppProps): JSX.Element {
@@ -29,14 +34,15 @@ function MyApp({Component, pageProps}: AppProps): JSX.Element {
   }, [auth]);
 
   return (
-    <>
-      <Provider>
-        <QueryClientProvider client={queryClient}>
+    <Provider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
           <Component {...pageProps} />
-        </QueryClientProvider>
-      </Provider>
-      <ToastContainer />
-    </>
+        </ThemeProvider>
+        <ToastContainer />
+      </QueryClientProvider>
+    </Provider>
   );
 }
 

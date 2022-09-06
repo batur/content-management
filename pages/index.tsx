@@ -5,12 +5,15 @@ import {api} from 'hooks';
 import MainLayout from 'layouts/MainLayout';
 import {Content, Modal} from 'components';
 import {Box} from '@mui/system';
-import {Button} from '@mui/material';
+import {Button, useMediaQuery, useTheme} from '@mui/material';
 import {Add} from '@mui/icons-material';
 import {useSetAtom} from 'jotai';
 import ModalAtom from 'store/Modal';
 
 const Home: NextPage = () => {
+  const theme = useTheme();
+  const mediumBreakpoint = useMediaQuery(theme.breakpoints.up('md'));
+
   const setModalState = useSetAtom(ModalAtom);
   const {data: contents} = api.useGetAllContent();
 
@@ -22,16 +25,18 @@ const Home: NextPage = () => {
       type: 'add'
     });
   }
+
   return (
     <MainLayout>
       <Box
         sx={{
-          padding: 4,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
           gap: 4,
-          width: '100%'
+          width: '100%',
+          height: mediumBreakpoint ? 'auto' : 'calc(100vh - 96px)',
+          overflow: mediumBreakpoint ? 'auto' : 'scroll'
         }}
       >
         <Box
@@ -48,6 +53,8 @@ const Home: NextPage = () => {
         </Box>
         <Box
           sx={{
+            paddingY: mediumBreakpoint ? 2 : 0,
+            paddingTop: mediumBreakpoint ? 0 : 6,
             display: 'flex',
             flexDirection: 'column',
             gap: 4,

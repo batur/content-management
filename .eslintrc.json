@@ -53,6 +53,13 @@
       }
     ],
     "react-hooks/exhaustive-deps": "off",
-    "max-len": ["error", {"code": 120}]
+    "max-len": ["error", {"code": 120}],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never"
+      }
+    ]
   }
 }
