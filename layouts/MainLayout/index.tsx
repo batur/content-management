@@ -4,8 +4,6 @@ import {Box, Button, Container, useMediaQuery, useTheme} from '@mui/material';
 
 import {ExitToApp} from '@mui/icons-material';
 import {useRouter} from 'next/router';
-import {useSetAtom} from 'jotai';
-import AuthAtom from 'store/Auth';
 
 type Props = {
   children: React.ReactNode;
@@ -16,11 +14,9 @@ const MainLayout: FC<Props> = ({children}) => {
   const theme = useTheme();
   const mediumBreakpoint = useMediaQuery(theme.breakpoints.up('md'));
 
-  const setAuth = useSetAtom(AuthAtom);
-
   const handleLogout = () => {
+    localStorage.removeItem('auth');
     router.push('/login');
-    setAuth(null);
   };
   return (
     <Box>

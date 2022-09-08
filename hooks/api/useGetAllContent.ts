@@ -2,11 +2,7 @@
 import {useQuery, UseQueryOptions} from '@tanstack/react-query';
 import axios, {AxiosError} from 'axios';
 
-import {isJWTInvalid} from 'helpers';
-
-import {useAtom} from 'jotai';
 import {toast} from 'react-toastify';
-import AuthAtom from 'store/Auth';
 
 export default function useGetAllContent(
   props?:
@@ -14,35 +10,39 @@ export default function useGetAllContent(
         initialData?: (() => undefined) | undefined;
       }
 ) {
-  const [auth, setAuth] = useAtom(AuthAtom);
-
+  const auth = () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('auth');
+    } else {
+      return null;
+    }
+  };
   return useQuery(
     ['use-get-all-content'],
     () =>
       axios
         .get('api/contents', {
           headers: {
-            Authorization: auth.token
+            Authorization: auth() ? `${JSON.parse(auth() as string).token}` : ''
           }
         })
         .then(() => {
           const contents = localStorage.getItem('contents');
 
-          if (contents) {
-            return JSON.parse(contents) as Content[];
-          } else {
+          if (!contents) {
             localStorage.setItem('contents', JSON.stringify([]));
             return [];
+          } else {
+            return JSON.parse(contents);
           }
         })
         .catch((err: AxiosError<Record<string, string>>) => {
-          isJWTInvalid(auth.token) && setAuth(null);
           toast.error(err.response?.data.message);
           throw err;
         }),
     {
       refetchOnWindowFocus: false,
-      enabled: !!auth,
+      enabled: !!auth(),
       ...props
     }
   );

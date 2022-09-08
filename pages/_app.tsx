@@ -4,45 +4,48 @@ import type {AppProps} from 'next/app';
 
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ToastContainer} from 'react-toastify';
-import {Provider, useAtom} from 'jotai';
-import React, {useEffect} from 'react';
-import AuthAtom from 'store/Auth';
-
-import {useRouter} from 'next/router';
-import {isJWTInvalid} from 'helpers';
 
 import {ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import theme from 'theme/index';
+import {useEffect} from 'react';
+import {useRouter} from 'next/router';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    mutations: {
+      cacheTime: 1000 * 60 * 60 * 24 // 24 hours
+    }
+  }
+});
 
 function MyApp({Component, pageProps}: AppProps): JSX.Element {
   const router = useRouter();
-  const [auth, setAuth] = useAtom(AuthAtom);
+  const auth = () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('auth');
+    } else {
+      return null;
+    }
+  };
 
   useEffect(() => {
-    const authLocalStorage = localStorage.getItem('auth');
-    setAuth(authLocalStorage);
-  }, []);
-
-  useEffect(() => {
-    if (!auth || isJWTInvalid(auth.token)) {
+    if (!auth()) {
       router.push('/login');
+    } else {
+      router.push('/');
     }
   }, [auth]);
 
   return (
-    <Provider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
-        <ToastContainer limit={5} position="bottom-right" />
-      </QueryClientProvider>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+      <ToastContainer limit={5} position="bottom-right" />
+    </QueryClientProvider>
   );
 }
 
