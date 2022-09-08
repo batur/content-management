@@ -1,29 +1,33 @@
 import React from 'react';
 import type {NextPage} from 'next';
 
-import {api} from 'hooks';
 import MainLayout from 'layouts/MainLayout';
 import {Content, Modal} from 'components';
 import {Box} from '@mui/system';
 import {Button, useMediaQuery, useTheme} from '@mui/material';
 import {Add} from '@mui/icons-material';
-import {useSetAtom} from 'jotai';
-import ModalAtom from 'store/Modal';
+import {openModal} from 'store/Modal';
+
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from 'store';
 
 const Home: NextPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const theme = useTheme();
   const mediumBreakpoint = useMediaQuery(theme.breakpoints.up('md'));
 
-  const setModalState = useSetAtom(ModalAtom);
-  const {data: contents} = api.useGetAllContent();
+  const contents = useSelector((state: RootState) => state.ContentSlice.contents);
 
   function handleAddContent() {
-    setModalState({
-      open: true,
-      title: 'Add Content',
-      content: '',
-      type: 'add'
-    });
+    dispatch(
+      openModal({
+        open: true,
+        title: 'Add Content',
+        content: '',
+        type: 'add'
+      })
+    );
   }
 
   return (

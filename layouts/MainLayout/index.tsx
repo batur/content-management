@@ -4,23 +4,23 @@ import {Box, Button, Container, useMediaQuery, useTheme} from '@mui/material';
 
 import {ExitToApp} from '@mui/icons-material';
 import {useRouter} from 'next/router';
-import {useSetAtom} from 'jotai';
-import AuthAtom from 'store/Auth';
 
+import {useDispatch} from 'react-redux';
+import {logout} from 'store/Auth';
+import {AppDispatch} from 'store';
 type Props = {
   children: React.ReactNode;
 };
 
 const MainLayout: FC<Props> = ({children}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const theme = useTheme();
   const mediumBreakpoint = useMediaQuery(theme.breakpoints.up('md'));
 
-  const setAuth = useSetAtom(AuthAtom);
-
   const handleLogout = () => {
     router.push('/login');
-    setAuth(null);
+    dispatch(logout());
   };
   return (
     <Box>
