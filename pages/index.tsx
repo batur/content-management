@@ -3,7 +3,7 @@ import type {NextPage} from 'next';
 
 import {api} from 'hooks';
 import MainLayout from 'layouts/MainLayout';
-import {Content, Modal} from 'components';
+import {Content, Loading, Modal} from 'components';
 import {Box} from '@mui/system';
 import {Button, useMediaQuery, useTheme} from '@mui/material';
 import {Add} from '@mui/icons-material';
@@ -11,6 +11,14 @@ import {useSetAtom} from 'jotai';
 import ModalAtom from 'store/Modal';
 
 const Home: NextPage = () => {
+  const auth = () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('auth');
+    } else {
+      return null;
+    }
+  };
+
   const theme = useTheme();
   const mediumBreakpoint = useMediaQuery(theme.breakpoints.up('md'));
 
@@ -24,6 +32,10 @@ const Home: NextPage = () => {
       content: '',
       type: 'add'
     });
+  }
+
+  if (!auth()) {
+    return <Loading />;
   }
 
   return (
