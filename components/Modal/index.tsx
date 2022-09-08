@@ -2,21 +2,23 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 
 import {Modal as MuiModal, Container, Box, Typography, IconButton} from '@mui/material';
+import {useAtom} from 'jotai';
+import ModalAtom from 'store/Modal';
 import {Close} from '@mui/icons-material';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from 'store';
-import {closeModal} from 'store/Modal';
 
 const TextEditor = dynamic(() => import('components/TextEditor'), {
   ssr: false
 });
 const Modal = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const modalState = useSelector((state: RootState) => state.ModalSlice);
+  const [modalState, setModalState] = useAtom(ModalAtom);
 
   const handleClose = () => {
-    dispatch(closeModal());
+    setModalState({
+      open: false,
+      title: '',
+      content: '',
+      type: ''
+    });
   };
   return (
     <MuiModal

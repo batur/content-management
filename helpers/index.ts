@@ -10,22 +10,6 @@ export const isJWTInvalid = (token: string): boolean => {
   return true;
 };
 
-export function isJWTExpired(exp: number): boolean {
-  return DateTime.fromSeconds(exp) > DateTime.local();
-}
-
-export function isJWTValid(token: string | null): boolean {
-  try {
-    const decoded = jwt.decode(token);
-
-    return isJWTExpired(decoded.exp);
-  } catch (e) {
-    console.error(e);
-
-    return false;
-  }
-}
-
 export const formatDate = (date: string): string => {
   return DateTime.fromISO(date).toLocaleString(DateTime.DATE_MED);
 };

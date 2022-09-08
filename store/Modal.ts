@@ -1,29 +1,10 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {atom} from 'jotai';
 
-const initialState = {
+const ModalAtom = atom({
   open: false,
   title: '',
   content: '',
   type: ''
-};
-
-export const ModalSlice = createSlice({
-  name: 'modal',
-  initialState,
-  reducers: {
-    openModal: (state, action) => {
-      state.open = true;
-      state.title = action.payload.title;
-      state.content = action.payload.content;
-      state.type = action.payload.type;
-    },
-    closeModal: (state) => {
-      state.open = false;
-      state.title = '';
-      state.content = '';
-      state.type = '';
-    }
-  }
 });
 
-export const {openModal, closeModal} = ModalSlice.actions;
+export default ModalAtom;

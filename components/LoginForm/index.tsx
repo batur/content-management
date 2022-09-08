@@ -1,17 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {Box, TextField, Button} from '@mui/material';
+import {api} from 'hooks';
 import {useRouter} from 'next/router';
 import React, {FC} from 'react';
 
 import {Controller, useForm} from 'react-hook-form';
 
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from 'store';
-import {login} from 'store/Auth';
-
 const LoginForm: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const router = useRouter();
   const {
     handleSubmit,
@@ -24,12 +19,14 @@ const LoginForm: FC = () => {
     }
   });
 
+  const {mutate, isLoading} = api.usePostLogin({
+    onSuccess: () => {
+      router.push('/');
+    }
+  });
+
   const handleLoginFormSubmit = (data: {username: string; password: string}): void => {
-    dispatch(login(data))
-      .unwrap()
-      .then(() => {
-        router.push('/');
-      });
+    mutate(data);
   };
 
   return (
@@ -97,7 +94,7 @@ const LoginForm: FC = () => {
           />
         )}
       />
-      <Button fullWidth type="submit" variant="contained">
+      <Button fullWidth type="submit" variant="contained" disabled={isLoading}>
         Log In
       </Button>
     </Box>

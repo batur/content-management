@@ -4,14 +4,16 @@ import 'quill/dist/quill.snow.css';
 import {useQuill} from 'react-quilljs';
 
 import {Box, Button} from '@mui/material';
-import {closeModal} from 'store/Modal';
-import {useDispatch} from 'react-redux';
-import {AppDispatch} from 'store';
-import {postContent} from 'store/Content';
+import {api} from 'hooks';
+import {useAtom} from 'jotai';
+import ModalAtom from 'store/Modal';
 
 const TextEditor = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const {quill, quillRef} = useQuill();
+
+  const {mutate, isLoading} = api.usePostContent();
+  const [modalState, setModalState] = useAtom(ModalAtom);
+
   const [isPostButtonDisabled, setIsPostButtonDisabled] = useState(true);
 
   useEffect(() => {
@@ -23,13 +25,24 @@ const TextEditor = () => {
   }, [quill]);
 
   const handlePost = () => {
+    mutate(quill.root.innerHTML);
     quill.setText('');
-    dispatch(closeModal());
-    dispatch(postContent(quill.root.innerHTML));
+    modalState.open &&
+      setModalState({
+        open: false,
+        title: '',
+        content: '',
+        type: ''
+      });
   };
 
   const handleClose = () => {
-    dispatch(closeModal());
+    setModalState({
+      open: false,
+      title: '',
+      content: '',
+      type: ''
+    });
     quill.setText('');
   };
   return (
@@ -52,7 +65,7 @@ const TextEditor = () => {
         <Button variant="contained" size="medium" color="error" onClick={handleClose}>
           Discard
         </Button>
-        <Button variant="contained" size="medium" onClick={handlePost} disabled={isPostButtonDisabled}>
+        <Button variant="contained" size="medium" onClick={handlePost} disabled={isPostButtonDisabled || isLoading}>
           Post
         </Button>
       </Box>
